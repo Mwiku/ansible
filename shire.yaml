@@ -50,7 +50,7 @@
         mode: '0755'
     - shell: /tmp/dotnet-install.sh
 
-     name: Install Node Version Manager (NVM)
+    - name: Install Node Version Manager (NVM)
       shell: >
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
       args:
