@@ -1,0 +1,78 @@
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Install apt packages
+      apt:
+        name:
+          - git
+          - htop
+          - tmux
+          - virtualbox
+          - vim
+          - vlc
+          - gimp
+          - filezilla
+          - mc
+          - docker.io
+          - curl
+          - wget
+          - remmina
+          - solaar
+          - deja-dup
+          - zsh
+        state: latest
+
+    - name: Download Vs Code .deb file
+      get_ulr:
+        url: https://code.visualstudio.com/docs/?dv=linux64_deb
+        dest: /tmp/vscode.deb
+
+    - name: Install Vs Code .deb file 
+      apt:
+        deb: /tmp/vscode.deb
+      become: true
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+    
+    - name: Install Rust
+      shell: > 
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+      args:
+        creates: "{{ ansible_env.HOME }}/.cargo/bin/rustc"
+    
+    - name: Install .NET SDK
+      get_url:
+        url: https://dot.net/v1/dotnet-install.sh
+        dest: /tmp/dotnet-install.sh
+        mode: '0755'
+    - shell: /tmp/dotnet-install.sh
+
+     name: Install Node Version Manager (NVM)
+      shell: >
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+      args:
+        creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+
+    - name: Install Node.js using NVM
+      shell: >
+        . {{ ansible_env.HOME }}/.nvm/nvm.sh && nvm install node
+      args:
+        creates: "{{ ansible_env.HOME }}/.nvm/versions/node"
+
+    - name: Install Angular CLI globally
+      npm:
+        name: "@angular/cli"
+        global: yes
+    
+
+    - name: Set Zsh as default shell 
+      user:
+        name: "{{ ansible_user_id }}"
+        shell: /bin/zsh
+
+    - name: Install zim framework zsh
+      shell: curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh
+      args:
+        executable: /bin/zsh
