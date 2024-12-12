@@ -19,6 +19,7 @@
           - remmina
           - solaar
           - deja-dup
+          - openssh-server
           - zsh
         state: latest
 
